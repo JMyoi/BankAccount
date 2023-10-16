@@ -1,17 +1,59 @@
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
-public class Main {
-    public static void main(String[] args) {
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+import java.util.Scanner;
 
-        // Press Shift+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
+/**
+ This program simulates a bank with checking and savings accounts.
+ */
+public class Main
+{
+    public static void main(String[] args)
+    {
+        // Create accounts
 
-            // Press Shift+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
+        final int ACCOUNTS_SIZE = 10;
+        BankAccount[] accounts = new BankAccount[ACCOUNTS_SIZE];
+        for (int i = 0; i < accounts.length / 2; i++)
+        {
+            accounts[i] = new CheckingAccount();
+        }
+
+        for (int i = accounts.length / 2; i < accounts.length; i++)
+        {
+            SavingsAccount account = new SavingsAccount();
+            account.setInterestRate(0.75);
+            accounts[i] = account;
+        }
+
+        // Execute commands
+
+        Scanner in = new Scanner(System.in);
+        boolean done = false;
+        while (!done)
+        {
+            System.out.print("D)eposit  W)ithdraw  M)onth end  Q)uit: ");
+            String input = in.next();
+            if (input.equals("D") || input.equals("W")) // Deposit or withdrawal
+            {
+                System.out.print("Enter account number and amount: ");
+                int num = in.nextInt();
+                double amount = in.nextDouble();
+
+                if (input.equals("D")) { accounts[num].deposit(amount); }
+                else { accounts[num].withdraw(amount); }
+
+                System.out.println("Balance: " + accounts[num].getBalance());
+            }
+            else if (input.equals("M")) // Month end processing
+            {
+                for (int n = 0; n < accounts.length; n++)
+                {
+                    accounts[n].monthEnd();
+                    System.out.println(n + " " + accounts[n].getBalance());
+                }
+            }
+            else if (input.equals("Q"))
+            {
+                done = true;
+            }
         }
     }
 }
